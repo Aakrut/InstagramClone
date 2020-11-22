@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.SearchActivity">
+    tools:context=".SearchActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -29,6 +29,7 @@
             android:layout_toRightOf="@id/search_edit_text"
             android:layout_centerVertical="true"
             android:layout_marginStart="20dp"
+            android:visibility="gone"
             android:src="@drawable/ic_baseline_cancel_24"/>
 
     </RelativeLayout>
