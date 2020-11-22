@@ -1,0 +1,65 @@
+<merge  xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <RelativeLayout
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content">
+
+        <TextView
+            android:id="@+id/post_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:textColor="#000000"
+            android:layout_marginStart="20dp"
+            android:textSize="40sp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Post"
+            android:textSize="20sp"
+            android:layout_marginStart="10dp"
+            android:layout_below="@id/post_number"/>
+
+        <TextView
+            android:id="@+id/follower_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:textColor="#000000"
+            android:layout_centerHorizontal="true"
+            android:layout_marginEnd="50dp"
+            android:textSize="40sp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Followers"
+            android:textSize="20sp"
+            android:layout_marginStart="10dp"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/follower_number"/>
+
+        <TextView
+            android:id="@+id/following_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:textColor="#000000"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="50dp"
+            android:textSize="40sp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Following"
+            android:textSize="20sp"
+            android:layout_marginStart="10dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="10dp"
+            android:layout_below="@id/following_number"/>
+
+    </RelativeLayout>
+
+</merge>
