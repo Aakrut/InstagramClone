@@ -32,6 +32,7 @@
                 android:textStyle="bold" />
 
             <Spinner
+                android:id="@+id/simple_spinner_dropdown_item"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
