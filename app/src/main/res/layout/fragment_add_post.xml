@@ -60,6 +60,7 @@
         app:layout_constraintTop_toBottomOf="@+id/appBarLayout2" />
 
     <GridView
+        android:id="@+id/gridView"
         android:layout_width="match_parent"
         android:layout_height="450dp"
         android:numColumns="3"
