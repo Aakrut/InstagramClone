@@ -69,6 +69,8 @@
             android:id="@+id/caption_image_add_post"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:maxWidth="20dp"
+            android:maxLines="1"
             android:fontFamily="@font/montserrat"
             android:inputType="textEmailAddress"
             android:paddingLeft="25dp" />
