@@ -1,6 +1,6 @@
 package com.ex.instagramclone.fragments
 
-import android.R.attr
+
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.net.Uri
@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.ex.instagramclone.databinding.FragmentAddPostBinding
 import com.theartofdev.edmodo.cropper.CropImage
@@ -19,6 +20,8 @@ class AddPostFragment : Fragment() {
     private val TAG = "AddPostFragment"
 
     private lateinit var addPostBinding: FragmentAddPostBinding
+    
+    private var resultUri : Uri ?= null 
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,18 +40,32 @@ class AddPostFragment : Fragment() {
             }
 
         }
+        
+        addPostBinding.postRightButton.setOnClickListener { 
+            postingImage()
+        }
 
         return view
     }
 
+    private fun postingImage() {
+        if(addPostBinding.imageSelectedPost.setImageURI(resultUri) == null){
+            Toast.makeText(context, "Please Select an Image", Toast.LENGTH_SHORT).show()
+        }else if(addPostBinding.captionImageAddPost.text.toString() == null){
+            Toast.makeText(context, "Please Add caption", Toast.LENGTH_SHORT).show()
+        }else{
+            Log.d(TAG, "postingImage: ${addPostBinding.captionImageAddPost.text.toString()} and uri ${resultUri.toString()}")
+        }
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode === CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             val result = CropImage.getActivityResult(data)
-            if (resultCode === RESULT_OK) {
-                val resultUri = result.uri
+            if (resultCode == RESULT_OK) {
+                resultUri = result.uri
                 addPostBinding.imageSelectedPost.setImageURI(resultUri)
-            } else if (resultCode === CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 val error = result.error
             }
         }

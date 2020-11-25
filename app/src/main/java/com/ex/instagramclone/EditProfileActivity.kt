@@ -1,6 +1,6 @@
 package com.ex.instagramclone
 
-import android.R.attr
+
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -38,13 +38,13 @@ class EditProfileActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode === CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             val result = CropImage.getActivityResult(data)
-            if (resultCode === RESULT_OK) {
+            if (resultCode == RESULT_OK) {
                 val resultUri: Uri = result.uri
                 editProfileBinding.circleImageViewProfileEdit.setImageURI(resultUri)
                 Log.d(TAG, "onActivityResult: Image Selected SuccessFully")
-            } else if (resultCode === CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 val error = result.error
             }
         }
