@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.ex.instagramclone.MainActivity
 import com.ex.instagramclone.databinding.FragmentAddPostBinding
 import com.theartofdev.edmodo.cropper.CropImage
 
@@ -49,12 +50,16 @@ class AddPostFragment : Fragment() {
     }
 
     private fun postingImage() {
-        if(addPostBinding.imageSelectedPost.setImageURI(resultUri) == null){
+        if(resultUri == null){
             Toast.makeText(context, "Please Select an Image", Toast.LENGTH_SHORT).show()
         }else if(addPostBinding.captionImageAddPost.text.toString() == null){
             Toast.makeText(context, "Please Add caption", Toast.LENGTH_SHORT).show()
         }else{
             Log.d(TAG, "postingImage: ${addPostBinding.captionImageAddPost.text.toString()} and uri ${resultUri.toString()}")
+            val intent = Intent()
+            intent.flags  = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(Intent(context,MainActivity::class.java))
+            activity!!.onBackPressed()
         }
     }
 
