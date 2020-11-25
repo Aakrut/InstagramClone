@@ -31,16 +31,9 @@
                 android:textSize="15sp"
                 android:textStyle="bold" />
 
-            <Spinner
-                android:id="@+id/simple_spinner_dropdown_item"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toEndOf="@+id/text_path"
-                android:text="Path"
-                android:textColor="#000000" />
 
             <ImageView
+                android:id="@+id/post_right_button"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_alignParentEnd="true"
@@ -54,20 +47,34 @@
     <ImageView
         android:id="@+id/image_selected_post"
         android:layout_width="match_parent"
-        android:layout_height="230dp"
+        android:layout_height="350dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/appBarLayout2" />
 
-    <GridView
-        android:id="@+id/gridView"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textinput1"
         android:layout_width="match_parent"
-        android:layout_height="450dp"
-        android:numColumns="3"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/image_selected_post"
-        tools:listitem="@layout/grid_image_item_list" />
+        android:layout_height="wrap_content"
+        android:elevation="10dp"
+        android:hint="Caption"
+        android:layout_marginTop="30dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
+        app:layout_constraintEnd_toEndOf="@+id/image_selected_post"
+        app:layout_constraintStart_toStartOf="@+id/image_selected_post"
+        app:layout_constraintTop_toBottomOf="@+id/image_selected_post">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/caption_image_add_post"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat"
+            android:inputType="textEmailAddress"
+            android:paddingLeft="25dp" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
