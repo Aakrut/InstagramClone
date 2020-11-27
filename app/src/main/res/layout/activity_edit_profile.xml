@@ -62,7 +62,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/montserrat"
-            android:inputType="textEmailAddress"
             android:paddingLeft="25dp" />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -75,11 +74,34 @@
         android:layout_marginTop="20dp"
         android:layout_marginEnd="40dp"
         android:elevation="10dp"
-        android:hint="Bio"
+        android:hint="Fullname"
         app:layout_constraintEnd_toEndOf="@+id/textinput1"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/textinput1"
         app:layout_constraintTop_toBottomOf="@+id/textinput1">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/fullname_edit_profile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat"
+            android:paddingLeft="25dp" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textinput3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="40dp"
+        android:elevation="10dp"
+        android:hint="Bio"
+        app:layout_constraintEnd_toEndOf="@+id/textinput2"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/textinput2"
+        app:layout_constraintTop_toBottomOf="@+id/textinput2">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/bio_edit_profile"
@@ -102,9 +124,9 @@
         android:text="Update"
         android:textAllCaps="false"
         android:textSize="20dp"
-        app:layout_constraintEnd_toEndOf="@+id/textinput2"
-        app:layout_constraintStart_toStartOf="@+id/textinput2"
-        app:layout_constraintTop_toBottomOf="@+id/textinput2" />
+        app:layout_constraintEnd_toEndOf="@+id/textinput3"
+        app:layout_constraintStart_toStartOf="@+id/textinput3"
+        app:layout_constraintTop_toBottomOf="@+id/textinput3" />
 
     <Button
         android:id="@+id/button_logout"
