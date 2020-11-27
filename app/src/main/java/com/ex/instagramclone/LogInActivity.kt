@@ -12,5 +12,7 @@ class LogInActivity : AppCompatActivity() {
         logInBinding = ActivityLogInBinding.inflate(layoutInflater)
         val view = logInBinding.root
         setContentView(view)
+
+
     }
 }
