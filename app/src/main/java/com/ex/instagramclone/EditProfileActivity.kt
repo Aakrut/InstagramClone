@@ -7,6 +7,9 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.ex.instagramclone.databinding.ActivityEditProfileBinding
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
 
@@ -15,12 +18,16 @@ class EditProfileActivity : AppCompatActivity() {
 
     private val TAG = "EditProfileActivity"
 
+    private lateinit var firebase_auth : FirebaseAuth
+
     private lateinit var editProfileBinding: ActivityEditProfileBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         editProfileBinding = ActivityEditProfileBinding.inflate(layoutInflater)
         val view = editProfileBinding.root
         setContentView(view)
+
+        firebase_auth = Firebase.auth
 
         editProfileBinding.circleImageViewProfileEdit.setOnClickListener {
             Log.d(TAG, "onCreateView: Post button Clicked")
@@ -32,6 +39,14 @@ class EditProfileActivity : AppCompatActivity() {
 
         editProfileBinding.cancelEditProfile.setOnClickListener {
             startActivity(Intent(this, MainActivity::class.java))
+            finish()
+        }
+
+        editProfileBinding.buttonLogout.setOnClickListener {
+            firebase_auth.signOut()
+            val intent = Intent()
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(Intent(this,LogInActivity::class.java))
             finish()
         }
     }

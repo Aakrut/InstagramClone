@@ -54,7 +54,7 @@ class InformationActivity : AppCompatActivity() {
            db.collection("Users").document(uid!!).set(hashamp_info).addOnSuccessListener {
                Toast.makeText(this, "SuccessFully Signed Up", Toast.LENGTH_SHORT).show()
                val intent = Intent()
-               intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+               intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
                startActivity(Intent(this,MainActivity::class.java))
                finish()
            }.addOnFailureListener {
