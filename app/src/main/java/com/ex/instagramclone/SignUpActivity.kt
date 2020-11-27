@@ -28,6 +28,11 @@ class SignUpActivity : AppCompatActivity() {
         signUpBinding.buttonSignupA.setOnClickListener {
             signup()
         }
+
+        signUpBinding.textLogin.setOnClickListener {
+            startActivity(Intent(this,LogInActivity::class.java))
+            finish()
+        }
     }
 
     private fun signup() {

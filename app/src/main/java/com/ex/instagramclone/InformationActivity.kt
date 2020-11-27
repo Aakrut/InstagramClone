@@ -1,5 +1,6 @@
 package com.ex.instagramclone
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
@@ -52,6 +53,10 @@ class InformationActivity : AppCompatActivity() {
            val db = Firebase.firestore
            db.collection("Users").document(uid!!).set(hashamp_info).addOnSuccessListener {
                Toast.makeText(this, "SuccessFully Signed Up", Toast.LENGTH_SHORT).show()
+               val intent = Intent()
+               intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+               startActivity(Intent(this,MainActivity::class.java))
+               finish()
            }.addOnFailureListener {
                Toast.makeText(this, it.toString(), Toast.LENGTH_SHORT).show()
            }

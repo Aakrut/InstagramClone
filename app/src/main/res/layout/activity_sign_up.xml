@@ -80,4 +80,17 @@
         app:layout_constraintTop_toBottomOf="@+id/textInputLayout"
         android:elevation="10dp"/>
 
+    <TextView
+        android:id="@+id/text_login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="84dp"
+        android:text="Have An Account? LogIn."
+        android:textSize="15sp"
+        android:textColor="#000000"
+        app:layout_constraintEnd_toEndOf="@+id/button_signup_a"
+        app:layout_constraintHorizontal_bias="0.518"
+        app:layout_constraintStart_toStartOf="@+id/button_signup_a"
+        app:layout_constraintTop_toBottomOf="@+id/button_signup_a" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
