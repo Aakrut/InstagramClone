@@ -111,6 +111,7 @@ class EditProfileActivity : AppCompatActivity() {
                 Log.d(TAG, "onActivityResult: Image Selected SuccessFully")
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 val error = result.error
+                Log.d(TAG, "onActivityResult : $error")
             }
         }
     }
@@ -155,6 +156,11 @@ class EditProfileActivity : AppCompatActivity() {
                                hashmap_info as Map<String, Any>
                            ).addOnSuccessListener {
                                Toast.makeText(this, "SuccessFully Updated Profile", Toast.LENGTH_SHORT).show()
+                               val intent = Intent()
+                               intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+                               startActivity(Intent(this,MainActivity::class.java))
+                               finish()
+                               Log.d(TAG, "updateProfile: Profile Updated")
                            }.addOnFailureListener{
                                Toast.makeText(this, it.toString(), Toast.LENGTH_SHORT).show()
                            }
