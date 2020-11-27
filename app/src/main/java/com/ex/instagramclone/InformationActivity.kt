@@ -47,7 +47,8 @@ class InformationActivity : AppCompatActivity() {
                 "fullname" to fullname,
                 "photo_url" to "https://firebasestorage.googleapis.com/v0/b/social-networks-clone2.appspot.com/o/image.png?alt=media&token=efa0c406-3d7a-4b39-9ccc-a9216ae9752e",
                 "bio" to "Instagram-Clone",
-                "uid" to uid
+                "uid" to uid,
+                "search" to fullname.toLowerCase()
             )
 
            val db = Firebase.firestore

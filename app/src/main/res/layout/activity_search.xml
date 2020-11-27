@@ -7,6 +7,7 @@
     tools:context=".SearchActivity">
 
     <RelativeLayout
+        android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:ignore="MissingConstraints">
@@ -15,23 +16,36 @@
             android:id="@+id/search_edit_text"
             android:layout_width="300dp"
             android:layout_height="60dp"
-            android:hint="search"
             android:layout_marginStart="20dp"
-            android:background="#EAEAEA"
-            android:paddingLeft="20dp"
             android:layout_marginTop="10dp"
-            />
+            android:background="#EAEAEA"
+            android:hint="search"
+            android:paddingLeft="20dp" />
 
         <ImageView
             android:id="@+id/cancel_search"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_toRightOf="@id/search_edit_text"
-            android:layout_centerVertical="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
             android:layout_marginStart="20dp"
-            android:visibility="gone"
-            android:src="@drawable/ic_baseline_cancel_24"/>
+            android:layout_marginLeft="22dp"
+            android:layout_marginTop="18dp"
+            android:layout_marginEnd="25dp"
+            android:layout_toRightOf="@id/search_edit_text"
+            android:src="@drawable/ic_baseline_cancel_24"
+            android:visibility="gone" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/search_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/search_edit_text"
+            android:layout_marginTop="10dp"
+            tools:layout_editor_absoluteX="226dp" />
 
     </RelativeLayout>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

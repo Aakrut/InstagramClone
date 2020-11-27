@@ -8,12 +8,15 @@ import android.view.View
 import android.view.ViewGroup
 import com.ex.instagramclone.R
 import com.ex.instagramclone.SearchActivity
+import com.ex.instagramclone.adapter.SearchAdapter
 import com.ex.instagramclone.databinding.FragmentSearchBinding
+import com.ex.instagramclone.model.User
 
 
 class SearchFragment : Fragment() {
 
     private lateinit var searchBinding: FragmentSearchBinding
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -22,6 +25,8 @@ class SearchFragment : Fragment() {
         // Inflate the layout for this fragment
         searchBinding = FragmentSearchBinding.inflate(inflater,container,false)
         val view = searchBinding.root
+
+
 
         searchBinding.searchImage.setOnClickListener {
             startActivity(Intent(context,SearchActivity::class.java))
