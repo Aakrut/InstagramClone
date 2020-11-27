@@ -13,7 +13,10 @@ import com.ex.instagramclone.R
 import com.ex.instagramclone.databinding.FragmentProfileBinding
 import com.ex.instagramclone.model.User
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
 
@@ -23,6 +26,8 @@ class ProfileFragment : Fragment() {
     private val TAG = "ProfileFragment"
 
     private lateinit var firebase_auth : FirebaseAuth
+
+    private lateinit var firebase_firestorage : FirebaseStorage
 
     private lateinit var firebase_firestore : FirebaseFirestore
 
@@ -35,6 +40,10 @@ class ProfileFragment : Fragment() {
         // Inflate the layout for this fragment
         profileBinding = FragmentProfileBinding.inflate(inflater,container,false)
         val view = profileBinding.root
+
+        firebase_auth = Firebase.auth
+
+        firebase_firestore = Firebase.firestore
 
         retreiveInfromation()
 
