@@ -20,6 +20,8 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.StorageTask
 import com.theartofdev.edmodo.cropper.CropImage
+import java.sql.Time
+import java.util.*
 
 
 class AddPostFragment : Fragment() {
@@ -78,13 +80,11 @@ class AddPostFragment : Fragment() {
                 Log.d(TAG, "postingImage: ${addPostBinding.captionImageAddPost.text.toString()} and uri ${resultUri.toString()}")
                 val image_storage = FirebaseStorage.getInstance().reference
 
-                image_storage.child("UsersPost")
-
                 val file_ref = image_storage.child(System.currentTimeMillis().toString() + ".jpg")
 
                 val uploadTask : StorageTask<*>
                 uploadTask = file_ref.putFile(resultUri!!)
-                val urlTask = uploadTask.continueWithTask { task ->
+                uploadTask.continueWithTask { task ->
                     if (!task.isSuccessful) {
                         task.exception?.let {
                             throw it
@@ -104,7 +104,8 @@ class AddPostFragment : Fragment() {
                                 "post_id" to post_id,
                                 "photo_caption" to addPostBinding.captionImageAddPost.text.toString(),
                                 "post_image_url" to url,
-                                "publisher" to Firebase.auth.currentUser?.uid
+                                "publisher" to Firebase.auth.currentUser?.uid,
+                                "publish_time" to System.currentTimeMillis()
                         )
 
                         ref.document(post_id).set(hasmap_post).addOnSuccessListener {
@@ -121,12 +122,7 @@ class AddPostFragment : Fragment() {
                         Toast.makeText(context, "Something Went Wrong", Toast.LENGTH_SHORT).show()
                     }
                 }
-
-
             }
-
         }
-
     }
-
 }
