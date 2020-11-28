@@ -87,7 +87,7 @@ class HomeFragment : Fragment() {
 
     private fun retreivePosts() {
         val db = Firebase.firestore
-        val ref = db.collection("Posts")
+        val ref = db.collection("Posts").orderBy("publish_time", Query.Direction.DESCENDING)
 
         ref.get().addOnSuccessListener { result ->
 
