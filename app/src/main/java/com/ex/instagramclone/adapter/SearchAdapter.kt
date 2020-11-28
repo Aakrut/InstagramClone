@@ -63,8 +63,6 @@ class SearchAdapter(val context : Context,val mUserList : List<User>) : Recycler
                             current_item.uid to true
                     )
 
-
-
                     reff.collection("Following")
                             .document(current_item.uid).set(hashmapref).addOnCompleteListener {
                                 task ->

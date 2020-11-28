@@ -13,6 +13,12 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.ex.instagramclone.MainActivity
 import com.ex.instagramclone.databinding.FragmentAddPostBinding
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.StorageTask
 import com.theartofdev.edmodo.cropper.CropImage
 
 
@@ -49,19 +55,6 @@ class AddPostFragment : Fragment() {
         return view
     }
 
-    private fun postingImage() {
-        if(resultUri == null){
-            Toast.makeText(context, "Please Select an Image", Toast.LENGTH_SHORT).show()
-        }else if(addPostBinding.captionImageAddPost.text.toString() == null){
-            Toast.makeText(context, "Please Add caption", Toast.LENGTH_SHORT).show()
-        }else{
-            Log.d(TAG, "postingImage: ${addPostBinding.captionImageAddPost.text.toString()} and uri ${resultUri.toString()}")
-            val intent = Intent()
-            intent.flags  = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(Intent(context,MainActivity::class.java))
-            activity!!.onBackPressed()
-        }
-    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -76,5 +69,64 @@ class AddPostFragment : Fragment() {
         }
     }
 
+    private fun postingImage() {
+        when{
+            resultUri == null ->  Toast.makeText(context, "Please Select an Image", Toast.LENGTH_SHORT).show()
+            addPostBinding.captionImageAddPost.text.toString() == null ->  Toast.makeText(context, "Please Add caption", Toast.LENGTH_SHORT).show()
+
+            else -> {
+                Log.d(TAG, "postingImage: ${addPostBinding.captionImageAddPost.text.toString()} and uri ${resultUri.toString()}")
+                val image_storage = FirebaseStorage.getInstance().reference
+
+                image_storage.child("UsersPost")
+
+                val file_ref = image_storage.child(System.currentTimeMillis().toString() + ".jpg")
+
+                val uploadTask : StorageTask<*>
+                uploadTask = file_ref.putFile(resultUri!!)
+                val urlTask = uploadTask.continueWithTask { task ->
+                    if (!task.isSuccessful) {
+                        task.exception?.let {
+                            throw it
+                        }
+                    }
+                    file_ref.downloadUrl
+                }.addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        val downloadUri = task.result
+                        val url = downloadUri.toString()
+
+                        val db = Firebase.firestore
+                        val ref = db.collection("Posts")
+                        val post_id = ref.document().id
+
+                        val hasmap_post = hashMapOf(
+                                "post_id" to post_id,
+                                "photo_caption" to addPostBinding.captionImageAddPost.text.toString(),
+                                "post_image_url" to url,
+                                "publisher" to Firebase.auth.currentUser?.uid
+                        )
+
+                        ref.document(post_id).set(hasmap_post).addOnSuccessListener {
+                            Toast.makeText(context, "SuccessFully Posted", Toast.LENGTH_SHORT).show()
+                            val intent = Intent()
+                            intent.flags  = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                            startActivity(Intent(context,MainActivity::class.java))
+                            activity!!.onBackPressed()
+                        }.addOnFailureListener{
+                            Toast.makeText(context, "Something Went Wrong", Toast.LENGTH_SHORT).show()
+                        }
+
+                    } else {
+                        Toast.makeText(context, "Something Went Wrong", Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+
+            }
+
+        }
+
+    }
 
 }
