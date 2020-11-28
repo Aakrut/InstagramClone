@@ -5,14 +5,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.ex.instagramclone.R
 import com.ex.instagramclone.model.Post
 import com.ex.instagramclone.model.User
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
@@ -27,7 +25,6 @@ class PostAdapter(val context : Context, val mPostList : List<Post>) : RecyclerV
     inner class PostViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView){
         var circle_image : CircleImageView ?= null
         var text_username : TextView ?= null
-        var text_time : TextView ?= null
         var desc_text : TextView ?= null
         var fullname_text : TextView ?= null
         var post_i : ImageView ?= null
@@ -37,7 +34,6 @@ class PostAdapter(val context : Context, val mPostList : List<Post>) : RecyclerV
         init {
             circle_image = itemView.findViewById(R.id.circle_image_home_item_list)
             text_username = itemView.findViewById(R.id.username_home_item_list)
-            text_time = itemView.findViewById(R.id.time_home_item_list)
             desc_text = itemView.findViewById(R.id.description_number_home_item_list)
             fullname_text = itemView.findViewById(R.id.fullname_home_item_list)
             post_i = itemView.findViewById(R.id.post_image)
@@ -55,7 +51,6 @@ class PostAdapter(val context : Context, val mPostList : List<Post>) : RecyclerV
        val current_item : Post = mPostList[position]
 
        holder.text_username!!.text = current_item.publisher
-       holder.text_time!!.text = current_item.publish_time
 
         publisherInfo(holder.circle_image, holder.text_username!!,holder.fullname_text, current_item.publisher)
     }
