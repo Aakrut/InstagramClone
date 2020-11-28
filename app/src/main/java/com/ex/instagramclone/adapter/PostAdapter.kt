@@ -50,7 +50,9 @@ class PostAdapter(val context : Context, val mPostList : List<Post>) : RecyclerV
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
        val current_item : Post = mPostList[position]
 
-       holder.text_username!!.text = current_item.publisher
+        holder.text_username!!.text = current_item.publisher
+        holder.desc_text!!.text = current_item.photo_caption
+        Picasso.get().load(current_item.post_image_url).into(holder.post_i)
 
         publisherInfo(holder.circle_image, holder.text_username!!,holder.fullname_text, current_item.publisher)
     }
@@ -64,7 +66,7 @@ class PostAdapter(val context : Context, val mPostList : List<Post>) : RecyclerV
     private fun publisherInfo(circleImage: CircleImageView?, textUsername: TextView, fullnameText: TextView?, publisher: String) {
 
         val  firebase_firestore = Firebase.firestore
-        val ref = firebase_firestore.collection("Users").document(firebase_user!!.uid)
+        val ref = firebase_firestore.collection("Users").document(publisher)
 
         ref.addSnapshotListener { snapshot, error ->
 
@@ -76,7 +78,7 @@ class PostAdapter(val context : Context, val mPostList : List<Post>) : RecyclerV
             if (snapshot != null && snapshot.exists()) {
                 Log.d("PostAdapter", "Current data: ${snapshot.data}")
                 val user = snapshot.toObject(User::class.java)
-                textUsername!!.text = user!!.username
+                textUsername.text = user!!.username
 
                 fullnameText!!.text = user.fullname
 

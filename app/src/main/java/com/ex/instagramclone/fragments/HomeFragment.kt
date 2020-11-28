@@ -29,7 +29,6 @@ class HomeFragment : Fragment() {
 
     private var post : MutableList<Post> ?= null
 
-
     private var followingList : MutableList<Post> ?= null
 
     private var postAdapter: PostAdapter ?= null
@@ -88,18 +87,18 @@ class HomeFragment : Fragment() {
 
     private fun retreivePosts() {
         val db = Firebase.firestore
-        val ref = db.collection("Posts").orderBy("publish_time", Query.Direction.DESCENDING)
+        val ref = db.collection("Posts")
 
         ref.get().addOnSuccessListener { result ->
 
-            post!!.clear()
+            post?.clear()
             for (document in result) {
                 Log.d(TAG, "${document.id} => ${document.data}")
                 val post_i : Post = document.toObject(Post::class.java)
                 Log.d(TAG, "retrieveAllPost: $post_i")
                 for(userId in (followingList as ArrayList<String>)){
                     if(post_i.publisher == userId){
-                        post!!.add(post_i)
+                        post?.add(post_i)
                         Log.d(TAG, "retrieveAllPost: SuccessFully Reached")
                     }
                     postAdapter?.notifyDataSetChanged()
