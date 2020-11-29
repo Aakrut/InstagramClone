@@ -9,9 +9,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ex.instagramclone.EditProfileActivity
 import com.ex.instagramclone.R
+import com.ex.instagramclone.adapter.MyImageAdapter
 import com.ex.instagramclone.databinding.FragmentProfileBinding
 import com.ex.instagramclone.model.Post
 import com.ex.instagramclone.model.User
@@ -22,6 +24,8 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class ProfileFragment : Fragment() {
@@ -40,7 +44,10 @@ class ProfileFragment : Fragment() {
 
     var postList : List<Post> ?= null
 
-    var myImageAdapter : MyImagesAdapter ?= null
+    var myImageAdapter : MyImageAdapter ?= null
+
+    private lateinit var follower_number : TextView
+    private lateinit var following_number : TextView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -54,11 +61,14 @@ class ProfileFragment : Fragment() {
 
         firebase_firestore = Firebase.firestore
 
+        follower_number = profileBinding.root.findViewById(R.id.follower_number)
+        following_number = profileBinding.root.findViewById(R.id.following_number)
+
         retreiveInfromation()
 
         val pref = context!!.getSharedPreferences("PREFS",Context.MODE_PRIVATE)
         if(pref != null){
-            context.profileId = pref.getString("profileID","none").toString()
+            context.profileID = pref.getString("profileID","none").toString()
         }
 
 
@@ -68,34 +78,33 @@ class ProfileFragment : Fragment() {
 
 
         postList = ArrayList()
-        myImageAdapter = MyImagesAdapter(this, postList as ArrayList<Post>)
+        myImageAdapter = MyImageAdapter(context!!, postList as ArrayList<Post>)
 
 
-        recyclerview.adapter = myImageAdapter
+        profileBinding.recyclerViewProfile.adapter = myImageAdapter
 
 
-        if(profileID == firebase_user!!.uid){
-            button_edit_your_profile.text = "Edit Your Profile"
-        }else if(profileID != firebase_user!!.uid){
+        if(profileID == firebase_auth.currentUser!!.uid){
+            profileBinding.buttonEditProfile.text = "Edit Your Profile"
+        }else if(profileID != firebase_auth.currentUser!!.uid){
             checkFollowandFollowingButtons()
         }
 
 
-        val edit_profile : Button = findViewById(R.id.button_edit_your_profile)
-        edit_profile.setOnClickListener {
-            val choosebutton = edit_profile.text.toString()
+
+        profileBinding.buttonEditProfile.setOnClickListener {
+            val choosebutton = profileBinding.buttonEditProfile.text.toString()
 
             when{
                 choosebutton == "Edit Your Profile" ->  {
-                    val intent = Intent(this,ProfileSettingsActivity::class.java)
+                    val intent = Intent(context,EditProfileActivity::class.java)
                     startActivity(intent)
-                    overridePendingTransition(R.anim.fade_in,R.anim.fade_out)
                 }
 
                 choosebutton == "Follow" -> {
                     val firebase_firestore = Firebase.firestore
 
-                    firebase_user?.uid.let {
+                    firebase_auth.currentUser?.uid.let {
                             it ->
                         val firebase_firestore = Firebase.firestore
                         val reff = firebase_firestore.collection("Follow").document(it.toString())
@@ -108,7 +117,7 @@ class ProfileFragment : Fragment() {
 
                     }
 
-                    firebase_user?.uid.let {
+                    firebase_auth.currentUser?.uid.let {
                             it ->
                         val firebase_firestore = Firebase.firestore
                         val reff = firebase_firestore.collection("Follow").document(profileID)
@@ -127,7 +136,7 @@ class ProfileFragment : Fragment() {
                 choosebutton == "Following" -> {
                     val firebase_firestore = Firebase.firestore
 
-                    firebase_user?.uid.let {
+                    firebase_auth.currentUser?.uid.let {
                             it ->
                         val firebase_firestore = Firebase.firestore
                         val reff = firebase_firestore.collection("Follow").document(it.toString()).
@@ -135,7 +144,7 @@ class ProfileFragment : Fragment() {
 
                     }
 
-                    firebase_user?.uid.let {
+                    firebase_auth.currentUser?.uid.let {
                             it ->
                         val firebase_firestore = Firebase.firestore
                         val reff = firebase_firestore.collection("Follow").document(profileID).
@@ -165,6 +174,24 @@ class ProfileFragment : Fragment() {
         return view
     }
 
+    private fun myPhotos(){
+        val firebase_firestore = Firebase.firestore
+        val ref = firebase_firestore.collection("Posts")
+
+        ref.get().addOnSuccessListener {result ->
+            (postList as ArrayList<Post>).clear()
+            for (document in result) {
+                Log.d("ProfileActivity", "${document.id} => ${document.data}")
+                val post = document.toObject(Post::class.java)
+                if(post.publisher.equals(profileID)){
+                    (postList as ArrayList<Post>).add(post)
+                }
+                Collections.reverse(postList)
+                myImageAdapter?.notifyDataSetChanged()
+            }
+        }
+    }
+
     private fun retreiveInfromation() {
         firebase_firestore.collection("Users").document(firebase_auth.currentUser!!.uid).addSnapshotListener { snapshot, e ->
 
@@ -187,6 +214,70 @@ class ProfileFragment : Fragment() {
             }
         }
     }
+
+    private fun checkFollowandFollowingButtons() {
+        val firebase_firestore = Firebase.firestore
+        val followingref = firebase_auth.currentUser?.uid.let {
+                it ->
+            firebase_firestore.collection("Follow").document(it.toString()).collection("Following").document(profileID)
+
+        }
+
+        if(followingref != null){
+            followingref.addSnapshotListener { snapshot, error ->
+                if (error != null) {
+                    Log.w("ProfileActivity", "Listen failed.", error)
+                    return@addSnapshotListener
+                }
+
+                if (snapshot != null && snapshot.exists()) {
+                    Log.d("ProfileActivity", "Current data: ${snapshot.data}")
+                    profileBinding.buttonEditProfile.text = "Following"
+                } else {
+                    Log.d("ProfileActivity", "Current data: null")
+                    profileBinding.buttonEditProfile.text = "Follow"
+                }
+            }
+        }
+    }
+
+    private fun retreiveFollowers(){
+        val firebase_firestore = Firebase.firestore
+        val followerref = firebase_auth.currentUser?.uid.let {
+                it ->
+            firebase_firestore.collection("Follow").document(it.toString()).collection("Followers")
+
+        }
+
+        followerref.get().addOnSuccessListener {
+                document ->
+            if (document != null) {
+                Log.d("UserAdapter", "DocumentSnapshot data: $document")
+
+                follower_number.text = document.size().toString()
+            } else {
+                Log.d("UserAdapter", "No such document")
+            }
+        }
+    }
+
+    private fun retreiveFollowings(){
+        val firebase_firestore = Firebase.firestore
+        val followerref =
+            firebase_firestore.collection("Follow").document(profileID).collection("Following")
+
+
+        followerref.get().addOnSuccessListener {
+                document ->
+            if (document != null) {
+                Log.d("ProfileActivity", "DocumentSnapshot data: $document")
+                following_number.text = document.size().toString()
+            } else {
+                Log.d("ProfileActivity", "No such document")
+            }
+        }
+    }
+
 
 
     override fun onPause() {
