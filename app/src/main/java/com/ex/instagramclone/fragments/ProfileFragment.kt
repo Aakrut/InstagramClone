@@ -68,7 +68,7 @@ class ProfileFragment : Fragment() {
 
         val pref = context!!.getSharedPreferences("PREFS",Context.MODE_PRIVATE)
         if(pref != null){
-            context.profileID = pref.getString("profileID","none").toString()
+            profileID = pref.getString("profileID","none").toString()
         }
 
 
