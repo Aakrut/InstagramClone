@@ -1,5 +1,6 @@
 package com.ex.instagramclone.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.util.Log
@@ -130,6 +131,7 @@ class PostAdapter(val context : Context, val mPostList : List<Post>) : RecyclerV
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun numberofcomments(commet: TextView?, postid: String) {
         val firebase_firestore = Firebase.firestore
 
@@ -139,7 +141,7 @@ class PostAdapter(val context : Context, val mPostList : List<Post>) : RecyclerV
             document ->
             if (document != null) {
                 Log.d("PostAdapter", "DocumentSnapshot data: ${document.data}")
-                commet!!.text = "view all" + document.data.toString() + "comments"
+                commet!!.text = "view all" + document.data?.size.toString() + "comments"
             } else {
                 Log.d("PostAdapter", "No such document")
             }
@@ -147,6 +149,7 @@ class PostAdapter(val context : Context, val mPostList : List<Post>) : RecyclerV
 
     }
 
+    @SuppressLint("SetTextI18n")
     private fun numberofLikes(likeText: TextView?, postid: String) {
         val firebase_firestore = Firebase.firestore
 
@@ -156,7 +159,7 @@ class PostAdapter(val context : Context, val mPostList : List<Post>) : RecyclerV
             document ->
             if (document != null) {
                 Log.d("PostAdapter", "DocumentSnapshot data: ${document.data}")
-                likeText!!.text = document.data.toString() + " likes"
+                likeText!!.text = document.data?.size.toString() + " likes"
             } else {
                 Log.d("PostAdapter", "No such document")
             }
