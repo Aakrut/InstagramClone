@@ -1,5 +1,6 @@
 package com.ex.instagramclone.fragments
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -8,9 +9,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.ex.instagramclone.EditProfileActivity
 import com.ex.instagramclone.R
 import com.ex.instagramclone.databinding.FragmentProfileBinding
+import com.ex.instagramclone.model.Post
 import com.ex.instagramclone.model.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -33,6 +36,12 @@ class ProfileFragment : Fragment() {
 
     private lateinit var profileBinding: FragmentProfileBinding
 
+    private lateinit var profileID : String
+
+    var postList : List<Post> ?= null
+
+    var myImageAdapter : MyImagesAdapter ?= null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -46,6 +55,108 @@ class ProfileFragment : Fragment() {
         firebase_firestore = Firebase.firestore
 
         retreiveInfromation()
+
+        val pref = context!!.getSharedPreferences("PREFS",Context.MODE_PRIVATE)
+        if(pref != null){
+            context.profileId = pref.getString("profileID","none").toString()
+        }
+
+
+        profileBinding.recyclerViewProfile.setHasFixedSize(true)
+        profileBinding.recyclerViewProfile.layoutManager = LinearLayoutManager(context)
+
+
+
+        postList = ArrayList()
+        myImageAdapter = MyImagesAdapter(this, postList as ArrayList<Post>)
+
+
+        recyclerview.adapter = myImageAdapter
+
+
+        if(profileID == firebase_user!!.uid){
+            button_edit_your_profile.text = "Edit Your Profile"
+        }else if(profileID != firebase_user!!.uid){
+            checkFollowandFollowingButtons()
+        }
+
+
+        val edit_profile : Button = findViewById(R.id.button_edit_your_profile)
+        edit_profile.setOnClickListener {
+            val choosebutton = edit_profile.text.toString()
+
+            when{
+                choosebutton == "Edit Your Profile" ->  {
+                    val intent = Intent(this,ProfileSettingsActivity::class.java)
+                    startActivity(intent)
+                    overridePendingTransition(R.anim.fade_in,R.anim.fade_out)
+                }
+
+                choosebutton == "Follow" -> {
+                    val firebase_firestore = Firebase.firestore
+
+                    firebase_user?.uid.let {
+                            it ->
+                        val firebase_firestore = Firebase.firestore
+                        val reff = firebase_firestore.collection("Follow").document(it.toString())
+
+                        val hashmapref = hashMapOf(
+                            profileID to true
+                        )
+
+                        reff.collection("Following").document(profileID).set(hashmapref)
+
+                    }
+
+                    firebase_user?.uid.let {
+                            it ->
+                        val firebase_firestore = Firebase.firestore
+                        val reff = firebase_firestore.collection("Follow").document(profileID)
+
+                        val hashmapref = hashMapOf(
+                            profileID to true
+                        )
+
+                        reff.collection("Followers").document(it.toString()).set(hashmapref)
+
+                    }
+
+
+                }
+
+                choosebutton == "Following" -> {
+                    val firebase_firestore = Firebase.firestore
+
+                    firebase_user?.uid.let {
+                            it ->
+                        val firebase_firestore = Firebase.firestore
+                        val reff = firebase_firestore.collection("Follow").document(it.toString()).
+                        collection("Following").document(profileID).delete()
+
+                    }
+
+                    firebase_user?.uid.let {
+                            it ->
+                        val firebase_firestore = Firebase.firestore
+                        val reff = firebase_firestore.collection("Follow").document(profileID).
+                        collection("Followers").document(it.toString()).delete()
+
+                    }
+
+
+                }
+
+
+
+            }
+        }
+
+
+
+        retreiveFollowers()
+        retreiveFollowings()
+        myPhotos()
+
 
         profileBinding.buttonEditProfile.setOnClickListener {
             startActivity(Intent(context,EditProfileActivity::class.java))
@@ -75,6 +186,21 @@ class ProfileFragment : Fragment() {
                 Log.d(TAG, "Current data: null")
             }
         }
+    }
+
+
+    override fun onPause() {
+        super.onPause()
+        val pref = context!!.getSharedPreferences("PREFS", Context.MODE_PRIVATE).edit()
+        pref.putString("profileID", firebase_auth.currentUser!!.uid)
+        pref.apply()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        val pref = context!!.getSharedPreferences("PREFS",Context.MODE_PRIVATE).edit()
+        pref.putString("profileID",firebase_auth.currentUser!!.uid)
+        pref.apply()
     }
 
 }
