@@ -41,6 +41,10 @@ class CommentActivity : AppCompatActivity() {
         postId = intent.getStringExtra("postId").toString()
         publisherId = intent.getStringExtra("publisherId").toString()
 
+        commentList = ArrayList()
+
+        commentAdapter = CommentAdapter(this, commentList as ArrayList<Comment>)
+
         commentBinding.recyclerViewComment.setHasFixedSize(true)
         commentBinding.recyclerViewComment.layoutManager = LinearLayoutManager(this)
         commentBinding.recyclerViewComment.adapter = commentAdapter
@@ -83,7 +87,6 @@ class CommentActivity : AppCompatActivity() {
         val hasmapcomment = hashMapOf(
             "comment" to commentBinding.addComment.text.toString(),
             "publisher" to firebase_user!!.uid
-
         )
 
         ref.set(hasmapcomment)
