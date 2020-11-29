@@ -34,8 +34,6 @@ class ProfileFragment : Fragment() {
 
     private lateinit var firebase_auth : FirebaseAuth
 
-    private lateinit var firebase_firestorage : FirebaseStorage
-
     private lateinit var firebase_firestore : FirebaseFirestore
 
     private lateinit var profileBinding: FragmentProfileBinding
@@ -102,7 +100,6 @@ class ProfileFragment : Fragment() {
                 }
 
                 choosebutton == "Follow" -> {
-                    val firebase_firestore = Firebase.firestore
 
                     firebase_auth.currentUser?.uid.let {
                             it ->
@@ -134,12 +131,12 @@ class ProfileFragment : Fragment() {
                 }
 
                 choosebutton == "Following" -> {
-                    val firebase_firestore = Firebase.firestore
+
 
                     firebase_auth.currentUser?.uid.let {
                             it ->
                         val firebase_firestore = Firebase.firestore
-                        val reff = firebase_firestore.collection("Follow").document(it.toString()).
+                        firebase_firestore.collection("Follow").document(it.toString()).
                         collection("Following").document(profileID).delete()
 
                     }
@@ -147,20 +144,15 @@ class ProfileFragment : Fragment() {
                     firebase_auth.currentUser?.uid.let {
                             it ->
                         val firebase_firestore = Firebase.firestore
-                        val reff = firebase_firestore.collection("Follow").document(profileID).
+                        firebase_firestore.collection("Follow").document(profileID).
                         collection("Followers").document(it.toString()).delete()
 
                     }
 
-
                 }
-
-
 
             }
         }
-
-
 
         retreiveFollowers()
         retreiveFollowings()
