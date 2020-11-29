@@ -1,6 +1,7 @@
 package com.ex.instagramclone.adapter
 
 import android.content.Context
+import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +9,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.ex.instagramclone.CommentActivity
+import com.ex.instagramclone.MainActivity
 import com.ex.instagramclone.R
 import com.ex.instagramclone.model.Post
 import com.ex.instagramclone.model.User
@@ -31,6 +34,7 @@ class PostAdapter(val context : Context, val mPostList : List<Post>) : RecyclerV
         var btn_like : ImageView ?= null
         var comment : ImageView ?= null
         var number_text_like : TextView ?= null
+        var comment_text_like : TextView ?= null
         init {
             circle_image = itemView.findViewById(R.id.circle_image_home_item_list)
             text_username = itemView.findViewById(R.id.username_home_item_list)
@@ -40,6 +44,7 @@ class PostAdapter(val context : Context, val mPostList : List<Post>) : RecyclerV
             btn_like = itemView.findViewById(R.id.like_button)
             comment = itemView.findViewById(R.id.comment_button)
             number_text_like = itemView.findViewById(R.id.like_number_home_item_list)
+            comment_text_like = itemView.findViewById(R.id.comment_text_home_item_list)
         }
     }
 
@@ -54,9 +59,110 @@ class PostAdapter(val context : Context, val mPostList : List<Post>) : RecyclerV
         holder.desc_text!!.text = current_item.photo_caption
         Picasso.get().load(current_item.post_image_url).into(holder.post_i)
 
+        islikes(current_item.post_id,holder.btn_like)
+
+        numberofLikes(holder.number_text_like,current_item.post_id)
+
+        numberofcomments(holder.comment_text_like,current_item.post_id)
+
         publisherInfo(holder.circle_image, holder.text_username!!,holder.fullname_text, current_item.publisher)
+
+        holder.btn_like!!.setOnClickListener {
+            if(holder.btn_like!!.tag == "Like" ){
+                val firebase_firestore = Firebase.firestore
+                val ref_like = firebase_firestore.collection("Likes").document(current_item.post_id)
+
+                val hashmaplike = hashMapOf(
+                        firebase_user!!.uid to true
+                )
+
+                ref_like.collection(firebase_user!!.uid).document(firebase_user!!.uid).set(hashmaplike)
+            }else{
+
+                val firebase_firestore = Firebase.firestore
+                val ref_like = firebase_firestore.collection("Likes").document(current_item.post_id)
+
+                ref_like.collection(firebase_user!!.uid).document(firebase_user!!.uid).delete()
+
+                val intent = Intent(context,MainActivity::class.java)
+                context.startActivity(intent)
+            }
+        }
+
+        holder.comment!!.setOnClickListener {
+            val intent = Intent(context, CommentActivity::class.java)
+            intent.putExtra("postId",current_item.post_id)
+            intent.putExtra("publisherId",current_item.publisher)
+            context.startActivity(intent)
+        }
+
+        holder.comment_text_like!!.setOnClickListener {
+            val intent = Intent(context, CommentActivity::class.java)
+            intent.putExtra("postId",current_item.post_id)
+            intent.putExtra("publisherId",current_item.publisher)
+            context.startActivity(intent)
+        }
+
     }
 
+
+    private fun islikes(postId: String, btnLike: ImageView?) {
+        val firebase_firestore = Firebase.firestore
+
+        val likeRef = firebase_firestore.collection("Likes").document(postId).collection(firebase_user!!.uid).document(firebase_user!!.uid)
+
+        likeRef.addSnapshotListener { snapshot, error ->
+
+            if (error != null) {
+                Log.w("PostAdapter", "Listen failed.", error)
+                return@addSnapshotListener
+            }
+
+            if (snapshot != null && snapshot.exists()) {
+                Log.d("PostAdapter", "Current data: ${snapshot.data}")
+                btnLike!!.setImageResource(R.drawable.ic_baseline_favorite_24)
+                btnLike.tag = "Liked"
+            } else {
+                Log.d("PostAdapter", "Current data: null")
+                btnLike!!.setImageResource(R.drawable.ic_baseline_favorite_border_24)
+                btnLike.tag = "Like"
+            }
+        }
+    }
+
+    private fun numberofcomments(commet: TextView?, postid: String) {
+        val firebase_firestore = Firebase.firestore
+
+        val number_ofcommentsRef = firebase_firestore.collection("Likes").document(postid)
+
+        number_ofcommentsRef.get().addOnSuccessListener {
+            document ->
+            if (document != null) {
+                Log.d("PostAdapter", "DocumentSnapshot data: ${document.data}")
+                commet!!.text = "view all" + document.data.toString() + "comments"
+            } else {
+                Log.d("PostAdapter", "No such document")
+            }
+        }
+
+    }
+
+    private fun numberofLikes(likeText: TextView?, postid: String) {
+        val firebase_firestore = Firebase.firestore
+
+        val number_oflikeRef = firebase_firestore.collection("Likes").document(postid)
+
+        number_oflikeRef.get().addOnSuccessListener {
+            document ->
+            if (document != null) {
+                Log.d("PostAdapter", "DocumentSnapshot data: ${document.data}")
+                likeText!!.text = document.data.toString() + " likes"
+            } else {
+                Log.d("PostAdapter", "No such document")
+            }
+        }
+
+    }
 
 
     override fun getItemCount(): Int {
