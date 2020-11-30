@@ -29,12 +29,13 @@ class StoryAdapter(val context: Context,val mStoryList : List<Story>) : Recycler
 
             story_image_plus_btn = itemView.findViewById(R.id.add_story_image_plus)
             add_story = itemView.findViewById(R.id.add_story_text)
+
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StoryViewHolder {
         if(viewType == 0){
-            return StoryViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.home_list_item,parent,false))
+            return StoryViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.add_story_item,parent,false))
         }else{
             return StoryViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.story_item,parent,false))
         }
@@ -42,6 +43,7 @@ class StoryAdapter(val context: Context,val mStoryList : List<Story>) : Recycler
 
     override fun onBindViewHolder(holder: StoryViewHolder, position: Int) {
         val current_item = mStoryList[position]
+
 
     }
 

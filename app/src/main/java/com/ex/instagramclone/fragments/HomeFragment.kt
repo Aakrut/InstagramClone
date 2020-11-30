@@ -54,7 +54,6 @@ class HomeFragment : Fragment() {
 
         story = ArrayList()
 
-
         postAdapter = context?.let { PostAdapter(it, post as ArrayList<Post>) }
 
         homeBinding.recyclerViewHome.setHasFixedSize(true)
@@ -64,10 +63,7 @@ class HomeFragment : Fragment() {
         storyAdapter = context?.let { StoryAdapter(it, post as ArrayList<Story>) }
 
         homeBinding.recyclerViewHomeStory.setHasFixedSize(true)
-       val linear_layout_manager : LinearLayoutManager = LinearLayoutManager(context)
-        linear_layout_manager.reverseLayout = true
-        linear_layout_manager.stackFromEnd = true
-        homeBinding.recyclerViewHomeStory.layoutManager = linear_layout_manager
+        homeBinding.recyclerViewHomeStory.layoutManager = LinearLayoutManager(context)
         homeBinding.recyclerViewHomeStory.adapter = storyAdapter
 
         checkFollowing()
