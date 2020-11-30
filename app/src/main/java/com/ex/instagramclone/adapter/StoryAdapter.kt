@@ -15,7 +15,7 @@ class StoryAdapter(val context: Context,val mStoryList : List<Story>) : Recycler
 
     inner class StoryViewHolder (itemView : View) : RecyclerView.ViewHolder(itemView){
         var story_image : CircleImageView ?= null
-        var story_image_seen : CircleImageView ?= null
+
         var story_username : TextView ?= null
 
         var story_image_plus_btn : ImageView ?= null
@@ -23,8 +23,8 @@ class StoryAdapter(val context: Context,val mStoryList : List<Story>) : Recycler
 
         init {
 
-            story_image = itemView.findViewById(R.id.story_image)
-            story_image_seen = itemView.findViewById(R.id.story_image_seen)
+            story_image = itemView.findViewById(R.id.story_image_item)
+
             story_username = itemView.findViewById(R.id.username_story_item)
 
             story_image_plus_btn = itemView.findViewById(R.id.add_story_image_plus)
