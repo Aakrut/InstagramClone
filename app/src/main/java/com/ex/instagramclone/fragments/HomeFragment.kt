@@ -1,5 +1,6 @@
 package com.ex.instagramclone.fragments
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -40,6 +41,8 @@ class HomeFragment : Fragment() {
         // Inflate the layout for this fragment
         homeBinding = FragmentHomeBinding.inflate(layoutInflater,container,false)
         val view = homeBinding.root
+
+
 
         firebaseAuth = Firebase.auth
 
