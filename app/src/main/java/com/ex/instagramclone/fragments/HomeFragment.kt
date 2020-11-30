@@ -1,6 +1,5 @@
 package com.ex.instagramclone.fragments
 
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -10,10 +9,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ex.instagramclone.adapter.PostAdapter
-import com.ex.instagramclone.adapter.StoryAdapter
 import com.ex.instagramclone.databinding.FragmentHomeBinding
 import com.ex.instagramclone.model.Post
-import com.ex.instagramclone.model.Story
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.Query
@@ -32,13 +29,12 @@ class HomeFragment : Fragment() {
 
     private var post : MutableList<Post> ?= null
 
-    private var story : MutableList<Story> ?= null
 
     private var followingList : MutableList<String> ?= null
 
     private var postAdapter: PostAdapter ?= null
 
-    private var storyAdapter: StoryAdapter ?= null
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -52,7 +48,7 @@ class HomeFragment : Fragment() {
 
         post = ArrayList()
 
-        story = ArrayList()
+
 
         postAdapter = context?.let { PostAdapter(it, post as ArrayList<Post>) }
 
@@ -60,11 +56,7 @@ class HomeFragment : Fragment() {
         homeBinding.recyclerViewHome.layoutManager = LinearLayoutManager(context)
         homeBinding.recyclerViewHome.adapter = postAdapter
 
-        storyAdapter = context?.let { StoryAdapter(it, post as ArrayList<Story>) }
 
-        homeBinding.recyclerViewHomeStory.setHasFixedSize(true)
-        homeBinding.recyclerViewHomeStory.layoutManager = LinearLayoutManager(context)
-        homeBinding.recyclerViewHomeStory.adapter = storyAdapter
 
         checkFollowing()
 
@@ -92,7 +84,7 @@ class HomeFragment : Fragment() {
                 }
 
                 retreivePosts()
-                retrieveStory()
+
 
             }
 
@@ -101,39 +93,40 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun retrieveStory() {
-        val db = Firebase.firestore
-        db.collection("Story").document().get().addOnSuccessListener {
-
-            result ->
-
-        val timeCurrent = System.currentTimeMillis()
-
-
-                (story as ArrayList<Story>).clear()
-
-                firebaseAuth.currentUser?.let { it1 -> Story("",0,0,"", it1.uid).toString() }?.let { it2 -> (followingList as ArrayList<String>).add(it2) }
-
-
-            for(id in followingList!!){
-                var countStory = 0
-
-                var story : Story ?= null
-
-                for (document in result.getDocumentReference(id)!!.path) {
-                    Log.d(TAG, "${document} => ${document}")
-                    story = result.toObject(Story::class.java)
-                    if(timeCurrent>story!!.timestart && timeCurrent<story!!.timeend){
-                        countStory++
-                    }
-                    if(countStory>0){
-                        (story as ArrayList<Story>).add(story)
-                    }
-                }
-                storyAdapter!!.notifyDataSetChanged()
-            }
-        }
-    }
+  //  Retrieving Stories
+//    private fun retrieveStory() {
+//        val db = Firebase.firestore
+//        db.collection("Story").document().get().addOnSuccessListener {
+//
+//            result ->
+//
+//        val timeCurrent = System.currentTimeMillis()
+//
+//
+//                (story as ArrayList<Story>).clear()
+//
+//                firebaseAuth.currentUser?.let { it1 -> Story("",0,0,"", it1.uid).toString() }?.let { it2 -> (followingList as ArrayList<String>).add(it2) }
+//
+//
+//            for(id in followingList!!){
+//                var countStory = 0
+//
+//                var story : Story ?= null
+//
+//                for (document in result.getDocumentReference(id)!!.path) {
+//                    Log.d(TAG, "${document} => ${document}")
+//                    story = result.toObject(Story::class.java)
+//                    if(timeCurrent>story!!.timestart && timeCurrent<story!!.timeend){
+//                        countStory++
+//                    }
+//                    if(countStory>0){
+//                        (story as ArrayList<Story>).add(story)
+//                    }
+//                }
+//                storyAdapter!!.notifyDataSetChanged()
+//            }
+//        }
+//    }
 
     private fun retreivePosts() {
         val db = Firebase.firestore
