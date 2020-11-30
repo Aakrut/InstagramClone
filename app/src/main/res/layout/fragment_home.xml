@@ -38,19 +38,20 @@
 
         </com.google.android.material.appbar.AppBarLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_view_home"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/appBarLayout3"
-            android:layout_marginTop="2dp"/>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view_home_story"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:layout_below="@id/appBarLayout3"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view_home"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/recycler_view_home_story"
+                android:layout_marginTop="2dp"/>
 
     </RelativeLayout>
-
-
-
-
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -10,8 +10,10 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ex.instagramclone.adapter.PostAdapter
+import com.ex.instagramclone.adapter.StoryAdapter
 import com.ex.instagramclone.databinding.FragmentHomeBinding
 import com.ex.instagramclone.model.Post
+import com.ex.instagramclone.model.Story
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.Query
@@ -30,9 +32,13 @@ class HomeFragment : Fragment() {
 
     private var post : MutableList<Post> ?= null
 
+    private var story : MutableList<Story> ?= null
+
     private var followingList : MutableList<Post> ?= null
 
     private var postAdapter: PostAdapter ?= null
+
+    private var storyAdapter: StoryAdapter ?= null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,17 +48,27 @@ class HomeFragment : Fragment() {
         homeBinding = FragmentHomeBinding.inflate(layoutInflater,container,false)
         val view = homeBinding.root
 
-
-
         firebaseAuth = Firebase.auth
 
         post = ArrayList()
+
+        story = ArrayList()
+
 
         postAdapter = context?.let { PostAdapter(it, post as ArrayList<Post>) }
 
         homeBinding.recyclerViewHome.setHasFixedSize(true)
         homeBinding.recyclerViewHome.layoutManager = LinearLayoutManager(context)
         homeBinding.recyclerViewHome.adapter = postAdapter
+
+        storyAdapter = context?.let { StoryAdapter(it, post as ArrayList<Story>) }
+
+        homeBinding.recyclerViewHomeStory.setHasFixedSize(true)
+       val linear_layout_manager : LinearLayoutManager = LinearLayoutManager(context)
+        linear_layout_manager.reverseLayout = true
+        linear_layout_manager.stackFromEnd = true
+        homeBinding.recyclerViewHomeStory.layoutManager = linear_layout_manager
+        homeBinding.recyclerViewHomeStory.adapter = storyAdapter
 
         checkFollowing()
 
@@ -80,11 +96,46 @@ class HomeFragment : Fragment() {
                 }
 
                 retreivePosts()
+                retrieveStory()
 
             }
 
         }.addOnFailureListener{
             Toast.makeText(context, "Something Went Wrong", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun retrieveStory() {
+        val db = Firebase.firestore
+        db.collection("Story").document().get().addOnSuccessListener {
+
+            result ->
+
+        val timeCurrent = System.currentTimeMillis()
+
+
+                (story as ArrayList<Story>).clear()
+
+                firebaseAuth.currentUser?.let { it1 -> Story("",0,0,"", it1.uid).toString() }?.let { it2 -> (followingList as ArrayList<String>).add(it2) }
+
+
+            for(id in followingList!!){
+                var countStory = 0
+
+                var story : Story ?= null
+
+                for (document in result.getDocumentReference(id.toString())!!.path) {
+                    Log.d(TAG, "${document} => ${document}")
+                    story = result.toObject(Story::class.java)
+                    if(timeCurrent>story!!.timestart && timeCurrent<story!!.timeend){
+                        countStory++
+                    }
+                    if(countStory>0){
+                        (story as ArrayList<Story>).add(story)
+                    }
+                }
+                storyAdapter!!.notifyDataSetChanged()
+            }
         }
     }
 
@@ -104,14 +155,13 @@ class HomeFragment : Fragment() {
                         post?.add(post_i)
                         Log.d(TAG, "retrieveAllPost: SuccessFully Reached")
                     }
-                    postAdapter?.notifyDataSetChanged()
                 }
-
+                postAdapter?.notifyDataSetChanged()
             }
         }.addOnFailureListener { exception ->
             Log.d(TAG, "Error getting documents: ", exception)
         }
     }
-    }
+}
 
 
