@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.ex.instagramclone.R
@@ -17,7 +18,7 @@ class StoryAdapter(val context: Context,val mStoryList : List<Story>) : Recycler
         var story_image_seen : CircleImageView ?= null
         var story_username : TextView ?= null
 
-        var story_image_plus_btn : CircleImageView ?= null
+        var story_image_plus_btn : ImageView ?= null
         var add_story : TextView ?= null
 
         init {
@@ -26,7 +27,7 @@ class StoryAdapter(val context: Context,val mStoryList : List<Story>) : Recycler
             story_image_seen = itemView.findViewById(R.id.story_image_seen)
             story_username = itemView.findViewById(R.id.username_story_item)
 
-            story_image_plus_btn = itemView.findViewById(R.id.add_story_image)
+            story_image_plus_btn = itemView.findViewById(R.id.add_story_image_plus)
             add_story = itemView.findViewById(R.id.add_story_text)
         }
     }

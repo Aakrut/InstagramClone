@@ -34,7 +34,7 @@ class HomeFragment : Fragment() {
 
     private var story : MutableList<Story> ?= null
 
-    private var followingList : MutableList<Post> ?= null
+    private var followingList : MutableList<String> ?= null
 
     private var postAdapter: PostAdapter ?= null
 
@@ -124,7 +124,7 @@ class HomeFragment : Fragment() {
 
                 var story : Story ?= null
 
-                for (document in result.getDocumentReference(id.toString())!!.path) {
+                for (document in result.getDocumentReference(id)!!.path) {
                     Log.d(TAG, "${document} => ${document}")
                     story = result.toObject(Story::class.java)
                     if(timeCurrent>story!!.timestart && timeCurrent<story!!.timeend){
