@@ -20,6 +20,7 @@ import com.ex.instagramclone.model.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
@@ -168,7 +169,7 @@ class ProfileFragment : Fragment() {
 
     private fun myPhotos(){
         val firebase_firestore = Firebase.firestore
-        val ref = firebase_firestore.collection("Posts")
+        val ref = firebase_firestore.collection("Posts").orderBy("publish_time",Query.Direction.ASCENDING)
 
         ref.get().addOnSuccessListener {result ->
             (postList as ArrayList<Post>).clear()

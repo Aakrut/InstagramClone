@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.ex.instagramclone.MainActivity
 import com.ex.instagramclone.databinding.FragmentAddPostBinding
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -105,7 +106,7 @@ class AddPostFragment : Fragment() {
                                 "photo_caption" to addPostBinding.captionImageAddPost.text.toString(),
                                 "post_image_url" to url,
                                 "publisher" to Firebase.auth.currentUser?.uid,
-                                "publish_time" to System.currentTimeMillis()
+                                "publish_time" to Timestamp.now()
                         )
 
                         ref.document(post_id).set(hasmap_post).addOnSuccessListener {
