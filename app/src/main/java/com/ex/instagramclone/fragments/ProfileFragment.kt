@@ -247,7 +247,7 @@ class ProfileFragment : Fragment() {
             if (document != null) {
                 Log.d("UserAdapter", "DocumentSnapshot data: $document")
 
-                follower_number.text = document.size().toString()
+                follower_number.text = (document.size().toString().toInt() - 1).toString()
             } else {
                 Log.d("UserAdapter", "No such document")
             }

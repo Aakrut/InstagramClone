@@ -141,7 +141,7 @@ class PostAdapter(val context : Context, val mPostList : List<Post>) : RecyclerV
             document ->
             if (document != null) {
                 Log.d("PostAdapter", "DocumentSnapshot data: ${document.data}")
-                commet!!.text = "view all" + document.data?.size.toString() + "comments"
+                commet!!.text = "view all" + document.data?.size.toString()
             } else {
                 Log.d("PostAdapter", "No such document")
             }
@@ -159,7 +159,7 @@ class PostAdapter(val context : Context, val mPostList : List<Post>) : RecyclerV
             document ->
             if (document != null) {
                 Log.d("PostAdapter", "DocumentSnapshot data: ${document.data}")
-                likeText!!.text = document.data?.size.toString() + " likes"
+                likeText!!.text = document.data?.size.toString()
             } else {
                 Log.d("PostAdapter", "No such document")
             }
